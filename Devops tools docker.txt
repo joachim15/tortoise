@@ -1,0 +1,120 @@
+FROM httpd:latest
+RUN apt-get update -y
+COPY index.html /usr/local/apache2/htdocs/
+#CMD ("/usr/sbin/httpd" ,"-D" , FOREGROUND")
+EXPOSE 80
+
+
+
+image: docker:latest
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay
+
+stages:
+  - build
+ 
+
+docker-build:
+  stage: build
+  script:
+  - docker build -t httpd:v2 .
+#  - docker login -u $HARBORID  -p $HARBORPASS $REGISTRY
+#  - docker push $REGISTRY/devops/train:v10
+
+
+
+
+FROM joachim15/apache-server:secondtry  
+RUN apt-get update -y
+COPY daughter /home/user/website/
+#CMD ("/usr/sbin/httpd" ,"-D" , FOREGROUND")
+EXPOSE 80
+
+
+
+
+https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4566
+
+ WHAT TO USE IF DOCKER DAEMON IS NOT WORKING 
+ 
+    Prepare extra configuration file. Create a file named /etc/systemd/system/docker.service.d/docker.conf. Inside the file docker.conf, paste below content:
+
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
+
+    Note that if there is no directory like docker.service.d or a file named docker.conf then you should create it.
+
+    Restart Docker. After saving this file, reload the configuration by systemctl daemon-reload and restart Docker by systemctl restart docker.service.
+
+    Check your Docker daemon. After restarting docker service, you can see the port in the output of systemctl status docker.service like /usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock.
+
+	
+	
+	/etc/cron.d
+
+	
+	/usr/local/tomcat7/webapps
+
+	
+	docker file 
+	
+	FROM httpd:v2 
+RUN apt-get update -y
+COPY index.html /var/www/html
+#CMD ("/usr/sbin/httpd" ,"-D" , FOREGROUND")
+EXPOSE 80
+
+
+
+
+FROM centos
+
+#MAINTAINER
+
+RUN mkdir /opt/tomcat/
+
+WORKDIR /opt/tomcat
+RUN curl -O https://mirror.olnevhost.net/pub/apache/tomcat/tomcat-7/v7.0.107/bin/apache-tomcat-7.0.107-deployer.tar.gz
+RUN tar xvfz apache*.tar.gz
+RUN mv apache-tomcat-7.0.107/* /opt/tomcat/.
+RUN yum -y install java
+RUN java -version
+
+WORKDIR /opt/tomcat/webapps
+COPY SampleWebApp.war /opt/tomcat/webapps
+
+EXPOSE 8086
+
+CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+
+
+
+
+
+FROM centos
+
+#MAINTAINER
+
+RUN mkdir /opt/tomcat/
+
+WORKDIR /opt/tomcat
+RUN curl -O https://mirror.olnevhost.net/pub/apache/tomcat/tomcat-7/v7.0.107/bin/apache-tomcat-7.0.107-deployer.tar.gz
+RUN tar xvfz apache*.tar.gz
+RUN mv apache* /opt/tomcat/.
+RUN yum -y install java
+RUN java -version
+
+WORKDIR /opt/tomcat/webapps
+COPY SampleWebApp.war /opt/tomcat/webapps
+
+EXPOSE 8086
+
+CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+
+
+	
+	
